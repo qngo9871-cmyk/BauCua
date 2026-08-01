@@ -1,0 +1,67 @@
+"home.title" = "Bầu Cua Tôm Cá";
+"home.subtitle" = "Traditional Dice Game — Play With Virtual Chips";
+"home.play" = "Play";
+"home.rules" = "Full Rules";
+"home.howtoplay" = "How to Play";
+"home.upgrade" = "Unlock Pro — themes, stats & more →";
+"home.stats" = "Stats";
+
+"chips.balance" = "Balance";
+
+"symbol.bau" = "Bầu";
+"symbol.cua" = "Cua";
+"symbol.tom" = "Tôm";
+"symbol.ca" = "Cá";
+"symbol.ga" = "Gà";
+"symbol.nai" = "Nai";
+
+"game.shake" = "Shake!";
+"game.clearBets" = "Clear Bets";
+
+"result.win" = "You won %d chips!";
+"result.lose" = "You lost %d chips.";
+"result.continue" = "Continue";
+
+"topup.title" = "Out of Chips";
+"topup.body" = "%d free chips are on the house — no purchase, ever.";
+"topup.claim" = "Claim Free Chips";
+"topup.wait" = "Next free top-up in %@";
+
+"stats.title" = "Your Stats";
+"stats.roundsPlayed" = "Rounds Played";
+"stats.biggestWin" = "Biggest Win";
+"stats.bestStreak" = "Best Match Streak";
+"stats.close" = "Close";
+
+"upgrade.title" = "Bầu Cua Pro";
+"upgrade.subtitle" = "Unlock the full experience.";
+"upgrade.feature.themes" = "Alternate dice & bowl visual themes";
+"upgrade.feature.stats" = "Detailed stats — streaks, biggest win & more";
+"upgrade.feature.noAds" = "No ads ever + unlimited free chip refills";
+"upgrade.owned" = "You own Bầu Cua Pro ✓";
+"upgrade.buy" = "Unlock — %@";
+"upgrade.buyFallback" = "Unlock Bầu Cua Pro";
+"upgrade.restore" = "Restore Purchases";
+"upgrade.close" = "Not Now";
+
+"rules.title" = "Full Rules";
+"rules.done" = "Done";
+"rules.symbols.title" = "The Six Symbols";
+"rules.symbols.body" = "Bầu (gourd), Cua (crab), Tôm (shrimp), Cá (fish), Gà (rooster), and Nai (deer) — one of these six appears on each of the 3 dice.";
+"rules.betting.title" = "Place Your Bets";
+"rules.betting.body" = "Stake chips on any one symbol, or spread bets across several at once. You need at least 1 chip staked on at least 1 symbol before you can shake.";
+"rules.roll.title" = "Shake the Bowl";
+"rules.roll.body" = "Three dice are shaken together, each landing on one of the six symbols independently.";
+"rules.payout.title" = "Payout";
+"rules.payout.body" = "For each symbol you bet on, count how many of the 3 dice show it. 0 matches loses your stake. 1, 2, or 3 matches returns your stake plus your stake × the number of matches — e.g. bet 10 chips, 2 dice match, you net +20.";
+"rules.topup.title" = "Never Buy Chips";
+"rules.topup.body" = "Chips can never be purchased with real money. If your balance hits 0, a free top-up is always available — Pro just removes the wait.";
+
+"onboarding.bet.title" = "Place Your Bets";
+"onboarding.bet.body" = "Choose one or more of the 6 symbols — Bầu, Cua, Tôm, Cá, Gà, Nai — and stake chips on each.";
+"onboarding.shake.title" = "Shake the Bowl";
+"onboarding.shake.body" = "Three dice tumble in the bowl, each landing on one of the six symbols.";
+"onboarding.payout.title" = "Match to Win";
+"onboarding.payout.body" = "Every die that matches a symbol you bet on pays out — the more matches, the bigger your win. No matches, and that stake is lost.";
+"onboarding.next" = "Next";
+"onboarding.begin" = "Let's Play";
