@@ -31,8 +31,8 @@ struct HomeView: View {
                     }
 
                     VStack(spacing: 4) {
-                        Text(L("chips.balance")).font(.caption).foregroundStyle(.white.opacity(0.6))
-                        Text("\(game.chips)").font(.system(size: 34, weight: .bold, design: .rounded))
+                        Text(L("score.label")).font(.caption).foregroundStyle(.white.opacity(0.6))
+                        Text("\(game.score)").font(.system(size: 34, weight: .bold, design: .rounded))
                             .foregroundStyle(.yellow)
                     }
 
@@ -86,7 +86,6 @@ struct HomeView: View {
             .sheet(isPresented: $showOnboarding) { OnboardingView(onFinished: { showOnboarding = false }) }
             .sheet(isPresented: $showStats) { StatsSheetView(game: game) }
             .task { await purchases.loadProduct() }
-            .onAppear { game.unlimitedFreeRefills = purchases.isPro }
         }
     }
 }
@@ -105,7 +104,7 @@ private struct StatsSheetView: View {
                 VStack(spacing: 22) {
                     Text("📊").font(.system(size: 44))
                     statRow(L("stats.roundsPlayed"), "\(game.roundsPlayed)")
-                    statRow(L("stats.biggestWin"), "+\(game.biggestWin)")
+                    statRow(L("stats.bestRoundScore"), "+\(game.bestRoundScore)")
                     statRow(L("stats.bestStreak"), "×\(game.bestStreak)")
                 }
                 .padding()

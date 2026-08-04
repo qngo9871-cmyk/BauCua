@@ -5,11 +5,29 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
-**Status: 🟢 SUBMITTED, WAITING_FOR_REVIEW (2026-08-01).** App id `6796833635`, version `1.0.0`
-(id `8b0e943a-241f-4b66-8b7e-c3e8d81b4537`), build `5137618b-f6a5-4aab-a178-72d83c206d3d`
-attached, reviewSubmission `a6a5a951-cc67-436d-a2d5-9226ef4e812e`. Age rating declaration used
-`gamblingSimulated: "FREQUENT_OR_INTENSE"` — confirmed accepted by Apple's API on first try
-(live-verified, not guessed). Release type: automatic (`AFTER_APPROVAL`).
+**Status: 🟢 REDESIGNED & RESUBMITTED, WAITING_FOR_REVIEW (2026-08-05).** App id
+`6796833635`, version `1.0.0` (id `8b0e943a-241f-4b66-8b7e-c3e8d81b4537`), build 2
+(`d11eceae-49c9-4124-b763-0c48358a0b50`) attached, new reviewSubmission
+`f631ffef-c17e-4e19-808b-4cd09f82b800` submitted. Release type: automatic
+(`AFTER_APPROVAL`).
+
+**History:** the original v1.0.0 submission (reviewSubmission
+`a6a5a951-cc67-436d-a2d5-9226ef4e812e`, build 1) was rejected 2026-08-04 under Guideline
+2.3.6 (Accurate Metadata): it had a real stake/wager/payout loop (bet chips → lose or win a
+multiple of the stake) and its age rating correctly declared `gamblingSimulated:
+"FREQUENT_OR_INTENSE"` — but Apple requires an **Organization** developer account for any
+app with that descriptor, and this account is Individual. Rather than enroll as an
+Organization, the game was **redesigned to remove the wagering mechanic entirely** (see
+"Redesign (2026-08-05)" below) — it's now a no-stakes prediction/scoring game with zero
+gambling-adjacent mechanics. `gamblingSimulated` was set to `NONE` and verified live via
+the API before resubmitting. The old reviewSubmission was canceled (`PATCH
+{"canceled": true}` → `CANCELING` → `COMPLETE`) to free the version and IAP per
+[[asc-resubmit-after-rejection]], app-level metadata/description/IAP-copy/screenshots were
+pushed with the new no-stakes language, build 2 was archived/exported/uploaded and attached
+once `processingState: VALID`, and the version was resubmitted. One residual: the Pro IAP's
+own name/description text is still the old "unlimited free refills" copy and couldn't be
+pushed — its `inAppPurchaseVersion` is locked ("inflight") until this review cycle
+resolves; see the "Not done yet" section for the follow-up.
 
 ## Deploy / resubmit pattern
 
@@ -37,61 +55,65 @@ resubmitting).
 
 ## ⚠️ Compliance constraint — read before touching game logic or IAP
 
-Bầu Cua Tôm Cá is traditionally a betting/wagering dice game. This app is a **pure
-chip-based simulation with zero connection to real money or real value**, and that must
-stay true forever:
+Bầu Cua Tôm Cá is traditionally a betting/wagering dice game, but **this app deliberately
+has no wagering, staking, or gambling mechanic of any kind**, and that must stay true
+forever — this is the direct fix for the 2.3.6 rejection above, not a stylistic choice:
 
-- **Chips are NEVER purchasable with real money.** No IAP may sell chips, currency, or
-  anything that affects betting odds/payouts. Do not add a "buy chips" / "refill chips"
-  IAP, even disguised as "remove the wait" — that's a real-money gambling-adjacent
-  mechanic and is exactly what this app (and the whole lineup, per SamLoc's CLAUDE.md) is
-  built to avoid.
-- If the chip balance hits 0, the player always gets a **free** top-up
-  (`GameModel.claimFreeTopUp()` — `GameModel.freeTopUpAmount` chips, first one instant,
-  then gated by `GameModel.freeTopUpCooldown`, 4h). Never make this a paid path.
+- **There is nothing to stake and nothing to lose.** The player predicts symbols
+  (`GameModel.predictions: Set<Symbol>`, a plain toggle, no amounts) and every match earns
+  a fixed number of points (`GameModel.pointsPerMatch`). `score` only ever goes up — there
+  is no "spend," no "balance that can hit 0," and therefore no top-up/refill mechanic at
+  all (the old chip-balance/free-top-up system was deleted along with the wagering loop,
+  not just hidden).
+- **Nothing is, or will ever be, purchasable with real money that affects scoring.** No IAP
+  may sell points, currency, extra predictions, or anything that affects match odds or
+  points-per-match. Do not reintroduce a stake/wager mechanic even in a disguised form
+  (e.g. "double your points" gambles, loot-box style bonuses) — that would recreate the
+  exact problem this redesign fixed.
 - The Pro IAP (`com.quyenngo.baucua.pro`, non-consumable, see `Core/PurchaseManager.swift`)
   unlocks **cosmetic/QoL only**: alternate dice/bowl visual themes, a detailed stats
-  screen, no ads, and unlimited free chip refills (`GameModel.unlimitedFreeRefills` — this
-  removes the cooldown timer, it does **not** grant purchasable chips). Pro must never
-  touch odds, payouts, or the chip economy. See the compliance comment block at the bottom
-  of `PurchaseManager.swift` before changing anything there.
-- **Age rating flag for the later ASC step:** unlike the other apps in this lineup, this
-  one is a dice/betting simulation and will need a **"Simulated Gambling" content
-  descriptor** set in the ASC review-info script when that step happens. Don't forget it —
-  it's the one thing that makes this app's ASC setup differ from SamLoc's.
+  screen, and no ads. Pro must never touch scoring or introduce anything wager-like. See
+  the compliance comment block at the bottom of `PurchaseManager.swift` before changing
+  anything there.
+- **Age rating for the ASC step:** unlike the rejected v1.0.0, this version's age rating
+  must declare `gamblingSimulated: "NONE"` (see `asc_push_baucua_review.py`) — it is no
+  longer accurate or necessary to declare a gambling descriptor, and declaring one again
+  would just reproduce the same Individual-account rejection.
 
 ## The game
 
 - 6 symbols (`Core/Symbol.swift`): Bầu, Cua, Tôm, Cá, Gà, Nai. Emoji placeholders
   (🍐🦀🦐🐟🐓🦌) — real dice-face art is a later step.
-- Player starts with 1000 chips (`GameModel.startingChips`), persisted via
-  `UserDefaults` (`AppStorage`-style keys prefixed `bc_`).
-- **Betting phase:** stake chips on any of the 6 symbols, multiple simultaneous bets
-  allowed at different amounts (`GameModel.bets: [Symbol: Int]`). Must stake ≥1 chip on
-  ≥1 symbol before rolling (`GameModel.canRoll`).
+- Player starts with 0 score (`GameModel.score`), persisted via `UserDefaults`
+  (`AppStorage`-style keys prefixed `bc_`). Score only ever increases — there is no way to
+  spend it or lose it, so there's no balance-hits-0 state to handle.
+- **Prediction phase:** tap any of the 6 symbols to predict it'll come up; multiple
+  simultaneous predictions allowed (`GameModel.predictions: Set<Symbol>`, a plain toggle —
+  no amounts). Must predict ≥1 symbol before rolling (`GameModel.canRoll`).
 - **Roll:** 3 dice, each independently uniform-random over the 6 symbols
   (`GameModel.roll()` → `Symbol.allCases.randomElement()!` ×3). `DiceBowlView` animates a
   ~0.9s shake (SwiftUI offset/rotation jitter) before settling.
-- **Payout**, per symbol bet on: count matches among the 3 dice (0–3). 0 matches loses the
-  stake. 1/2/3 matches returns the stake plus stake × matches (net gain = stake × matches —
-  e.g. bet 10, 2 matches → net +20, total returned 30). Implemented in
-  `Core/Bet.swift` (`BetResult.netChange` / `.totalReturned`) and settled in
-  `GameModel.settle(dice:staked:)`.
-- **Round loop:** after settling, bets clear and the board returns to the betting phase.
-  No AI opponent — solo vs. the house — so there's no `AIPlayer.swift` and no difficulty
-  concept anywhere in this app (deliberate difference from SamLoc's structure).
-- **Stats** (`GameModel.roundsPlayed` / `.biggestWin` / `.bestStreak`, persisted): shown
-  in the Pro-only stats sheet (`StatsSheetView`, defined privately inside
+- **Scoring**, per symbol predicted: count matches among the 3 dice (0–3). Each match is
+  worth `GameModel.pointsPerMatch` (10) points — 0 matches earns 0 for that symbol, never a
+  loss. Implemented in `Core/Guess.swift` (`GuessResult.pointsEarned`) and settled in
+  `GameModel.settle(dice:predicted:)`.
+- **Round loop:** after settling, predictions clear and the board returns to the
+  prediction phase. No AI opponent — solo, no opponent at all — so there's no
+  `AIPlayer.swift` and no difficulty concept anywhere in this app (deliberate difference
+  from SamLoc's structure).
+- **Stats** (`GameModel.roundsPlayed` / `.bestRoundScore` / `.bestStreak`, persisted):
+  shown in the Pro-only stats sheet (`StatsSheetView`, defined privately inside
   `Views/HomeView.swift` rather than as its own file).
 
 ## Structure
 
-- `BauCua/Core/` — `Symbol.swift`, `Bet.swift` (`Bet` + `BetResult`), `GameModel.swift`
-  (betting/rolling/payout/free-top-up + `#if DEBUG` `captureSetup(_:)` for screenshots),
+- `BauCua/Core/` — `Symbol.swift`, `Guess.swift` (`GuessResult`), `GameModel.swift`
+  (prediction/rolling/scoring + `#if DEBUG` `captureSetup(_:)` for screenshots),
   `PurchaseManager.swift`, `Localization.swift` (copied verbatim from SamLoc — no
   app-specific strings live in this file).
 - `BauCua/Views/` — `HomeView`, `GameView`, `DiceBowlView` (the shaking dice/bowl),
-  `BetBoardView` (the 6-symbol betting grid), `RulesView`, `OnboardingView`, `UpgradeView`.
+  `PredictionBoardView` (the 6-symbol prediction grid), `RulesView`, `OnboardingView`,
+  `UpgradeView`.
 - `BauCua/{en,vi}.lproj/Localizable.strings` — real hand-written bilingual UI strings
   (not machine-translated), using the correct terms: Bầu, Cua, Tôm, Cá, Gà, Nai, "đặt
   cược" (place bet), "lắc" (shake/roll). No `%@`-for-name templated strings exist in this
@@ -99,7 +121,7 @@ stay true forever:
   still worth a re-check if templated strings are ever added.
 - `capture_shots.py` — drives the simulator via `BC_CAPTURE` / `BC_LANG` DEBUG launch args
   (mirrors SamLoc's `SL_CAPTURE`/`SL_LANG` convention) to produce real in-app screenshots
-  into `screenshots/final/{en,vi}/`. Capture scenarios: `home`, `betting`, `rolling`,
+  into `screenshots/final/{en,vi}/`. Capture scenarios: `home`, `predicting`, `rolling`,
   `result`, `upgrade`, `rules` (wired in `ContentView.swift` + `GameModel.captureSetup`).
 - `make_icon.py` — generates the real app icon: a bold gold crab (Cua) silhouette emblem
   on a red/gold Tet-festival gradient. See "App-Store-ready pass" below for details.
@@ -108,26 +130,41 @@ stay true forever:
 
 ## Judgment calls made during this build (not spelled out in the original spec)
 
-- **`Bet.swift` scope:** holds both the staging-area line item (`Bet`) and the
-  post-roll outcome (`BetResult`), since a single-purpose `Bet` struct alone wouldn't
-  carry match-count/payout math anywhere sensible.
 - **No separate `StatsView.swift` file:** the spec's target file list only names
-  `HomeView/GameView/DiceBowlView/BetBoardView/RulesView/OnboardingView/UpgradeView`, but
-  also calls out a Pro "detailed stats screen" as a feature. Implemented as a small private
-  `StatsSheetView` inside `Views/HomeView.swift` rather than adding an eighth Views file,
-  to stay literally within the given structure.
-- **Free top-up UX:** first time the balance hits 0, the top-up is instant (no
-  `lastFreeTopUpDate` yet); after that it's gated by a 4-hour cooldown for free-tier
-  players, shown as a live countdown in `GameView`'s `topUpOverlay`. Pro
-  (`unlimitedFreeRefills`) always shows the "Claim Free Chips" button with no wait — still
-  free, just no timer, per the compliance constraint.
-- **Bet input control:** used tap-to-add-current-chip-value + long-press-to-clear per
-  symbol cell (`BetBoardView`) rather than steppers, to keep the 6-symbol grid compact on
-  one screen; chip denominations are 10/50/100/500, selectable via a pill row in
-  `GameView`.
+  `HomeView/GameView/DiceBowlView/PredictionBoardView/RulesView/OnboardingView/UpgradeView`,
+  but also calls out a Pro "detailed stats screen" as a feature. Implemented as a small
+  private `StatsSheetView` inside `Views/HomeView.swift` rather than adding an eighth Views
+  file, to stay literally within the given structure.
 - `rebuild.sh` didn't exist in SamLoc (despite being referenced as a convention) — built it
   fresh, closely modeled on `~/Projects/ChineseChess/rebuild.sh`'s clean/build-for-sim/
   build-for-device shape, plus an `xcodegen generate` step up front.
+
+## Redesign (2026-08-05): removed the wagering mechanic entirely
+
+The original v1.0.0 build (`Bet.swift`/`BetBoardView.swift`, chip stakes, payout multiples,
+a chip-balance-hits-0 free-top-up system) was rejected by App Review under Guideline 2.3.6
+— see the Status line at the top. Rather than enroll as an Organization developer account,
+the whole stake/wager/payout loop was deleted and replaced with a no-stakes
+prediction-and-score loop:
+
+- `Bet.swift` → `Core/Guess.swift` (`GuessResult`, points-only, no `netChange`/loss concept).
+- `GameModel`: `chips`/`bets: [Symbol: Int]`/`adjustBet`/`setBet`/`totalBet` → `score`/
+  `predictions: Set<Symbol>`/`toggle`/`clearPredictions`. `roll()` no longer debits
+  anything up front. `settle()` only ever adds points. The free-top-up system
+  (`claimFreeTopUp`, `freeTopUpAmount`, `freeTopUpCooldown`, `lastFreeTopUpDate`,
+  `unlimitedFreeRefills`, `topUpAvailable`, `topUpCooldownRemaining`) was deleted outright —
+  it's structurally impossible to run out of points now, so there's nothing to top up.
+- `BetBoardView.swift` → `Views/PredictionBoardView.swift`: cells are a plain on/off toggle
+  (checkmark), no chip-value picker, no long-press-to-clear (tap toggles both ways).
+- `GameView`: removed the chip-value picker row and `topUpOverlay`/tick timer entirely.
+- `UpgradeView`/Pro feature set: dropped "unlimited free chip refills" (nothing to refill
+  anymore) — Pro is now purely alternate themes + detailed stats + no ads.
+- All `en`/`vi` `Localizable.strings`, `RulesView`/`OnboardingView` copy, `capture_shots.py`
+  headlines, and the ASC store description/promo/keywords (`asc_push_baucua.py`) needed
+  matching copy changes away from "bet"/"stake"/"wager" language toward "predict"/"guess"/
+  "score" — Apple's 2.3.6 rejection is about the app's *declared nature* matching its
+  *actual behavior*, so leftover betting language in the description would be just as
+  wrong as leftover betting code.
 
 ## Build
 
@@ -137,9 +174,19 @@ xcodegen generate
 xcodebuild -project BauCua.xcodeproj -scheme BauCua -destination 'generic/platform=iOS Simulator' build
 ```
 
-Verified clean simulator build + runtime smoke test (launch, betting screen, roll/settle,
-result overlay) on iPhone 17 Pro simulator during this build pass — payout math confirmed
-correct (e.g. 50-chip stake × 2 matches → +100 net, shown and computed identically).
+Verified clean simulator build after the redesign (2026-08-05), plus a real runtime pass on
+iPhone 17 Pro Max: ran `capture_shots.py` (home/predicting/rolling/result/upgrade, en+vi —
+this exercises the actual `GameModel.roll()`/`settle()` async flow, not just static state)
+and separately captured Rules and Onboarding via `BC_CAPTURE=rules`/`onboarding`. All screens
+visually inspected — score persistence across launches confirmed (UserDefaults `bc_score`
+carried a real value from a prior capture into a later plain-home launch), prediction
+toggle/checkmark UI correct, result math correct (e.g. 2×+3×1 matches → +30, shown and
+computed identically), Rules/Onboarding copy reads correctly in both languages, Upgrade
+screen shows the 3 Pro features with no leftover refill-wait text. Did not exercise a live
+StoreKit purchase (no `.storekit` local test config in this project; `#if DEBUG` forces
+`isPro = true` so the buy button doesn't render in Debug builds) — this matches how Pro was
+tested for the original v1.0.0 submission, and the purchase code path itself was not
+touched by this redesign (only its feature-description text changed).
 
 `./rebuild.sh` runs both a simulator build and a device-archive build (mirroring
 `~/Projects/ChineseChess/rebuild.sh`'s shape). **The device-archive step will fail today**
@@ -184,28 +231,35 @@ registration/submission itself is still a separate, later step — out of scope 
     language (Vietnamese diacritics render correctly, no mojibake), right chip
     balance/payout numbers, no placeholder text, no mid-animation garbage.
 - **Legal site:** built `~/Projects/baucua-legal/` (`index.html` / `privacy.html` /
-  `support.html`), following the exact template/CSS of `~/Projects/fanorona-legal/`. Live
-  at **https://qngo9871-cmyk.github.io/baucua-legal/** (public repo
-  `qngo9871-cmyk/baucua-legal`, GitHub Pages enabled from `main`/`/`). Unlike the other
-  legal sites in this lineup, this one carries **explicit, prominent no-real-money /
-  not-a-gambling language** per this app's compliance constraint (see above): `support.html`
-  has a callout-boxed statement that chips are virtual only, cannot be purchased with real
-  money, hold no cash value, and that the app is not a gambling app; `privacy.html`'s
-  Purchases section explicitly states the Pro IAP is cosmetic/QoL-only (alternate
-  dice/bowl themes, detailed stats, no ads, unlimited free refill wait-removal) and never
-  sells or affects chips, odds, or payouts. The Pro feature list in `support.html` was
-  pulled from the actual current code (`PurchaseManager.swift`'s compliance comment +
-  `Localizable.strings`'s `upgrade.feature.*` keys), not guessed.
-
-**⚠️ Reminder for the ASC step (still pending):** this privacy site now publicly and
-explicitly commits to the no-real-money stance — so when App Store Connect registration
-happens, **do not forget the "Simulated Gambling" age-rating content descriptor** in the
-review-info script. This is still the one thing that makes this app's ASC setup differ
-from SamLoc's, and it's now doubly important to get right since the published legal site
-is making public claims that the age rating needs to match.
+  `support.html`, en + `vi/`), following the exact template/CSS of
+  `~/Projects/fanorona-legal/`. Live at **https://qngo9871-cmyk.github.io/baucua-legal/**
+  (public repo `qngo9871-cmyk/baucua-legal`, GitHub Pages enabled from `main`/`/`). Carries
+  **explicit no-wagering language**: `support.html` states there's nothing to stake and
+  nothing to lose, points are never purchasable and hold no cash value; `privacy.html`'s
+  Purchases section states the Pro IAP is cosmetic/QoL-only (alternate dice/bowl themes,
+  detailed stats, no ads) and never affects scoring. **Updated 2026-08-05** (all 6 pages,
+  en + vi) to match the redesign — "chip/stake/bet" language fully replaced with
+  "point/predict/score" across all pages; not yet pushed to the live GitHub Pages site,
+  just committed locally (see ASC/legal push step below).
 
 ## Not done yet (later steps, not this session's scope)
 
-- App Store Connect: bundle ID registration, app record, IAP product, pricing, review
-  info (**remember the Simulated Gambling content descriptor**), screenshots upload.
-- Sideload / device testing, TestFlight, submission.
+- Sideload / device testing, TestFlight.
+- Push the updated `baucua-legal` repo (git commit + push) so the live site matches the
+  local files before resubmission — GitHub Pages won't pick up the redesign copy until
+  that happens.
+- **IAP metadata text is stale and currently un-editable via the API.** The Pro IAP's
+  name/description/reviewNote still say "unlimited free refills" (a feature this redesign
+  removed) — `asc_push_baucua.py`'s IAP-localization PATCH 409s with
+  `STATE_ERROR.IAP_VERSION_UNMODIFIABLE` / `ENTITY_ERROR...UNMODIFIABLE` because the IAP's
+  `inAppPurchaseVersion` is "inflight" (`STATE_ERROR.ALREADY_EXISTS` on trying to create a
+  fresh one) — this is normal Apple IAP-versioning behavior: it locks for editing once
+  attached to a version under review, and only unlocks after that review cycle resolves
+  (approve or reject), regardless of the parent app's own reviewSubmission being canceled.
+  **Once this resubmission comes back from Apple (either outcome), re-run
+  `asc_push_baucua.py` to push the corrected IAP name/description** (already updated in
+  the script's `IAP` dict — just couldn't push yet). Same lock applies to
+  `asc_upload_baucua_iap_screenshot.py` (409 `UNMODIFIABLE` on `reviewScreenshot`) — the
+  IAP's review screenshot is still the one from the original v1.0.0 submission (the Pro
+  paywall screen; doesn't show any gambling content, so low risk to leave as-is for this
+  cycle) — re-run that script too once unlocked.

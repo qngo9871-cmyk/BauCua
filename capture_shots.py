@@ -16,18 +16,18 @@ BAND = 470
 
 SHOTS = {
     "en": [
-        ("01-home",    "home",    "Bầu Cua Tôm Cá —\nVirtual Chips, Zero Real Money"),
-        ("02-betting", "betting", "Bet on one symbol\nor spread across several"),
-        ("03-rolling", "rolling", "Shake the bowl —\nthree dice, six symbols"),
-        ("04-result",  "result",  "Match to win —\nstake × matches, every time"),
-        ("05-upgrade", "upgrade", "Pro themes,\nstats & no ads"),
+        ("01-home",      "home",       "Bầu Cua Tôm Cá —\nPredict & Score, No Wagering"),
+        ("02-predicting", "predicting", "Predict one symbol\nor pick several at once"),
+        ("03-rolling",   "rolling",    "Shake the bowl —\nthree dice, six symbols"),
+        ("04-result",    "result",     "Match to score —\n10 points per match, every time"),
+        ("05-upgrade",   "upgrade",    "Pro themes,\nstats & no ads"),
     ],
     "vi": [
-        ("01-home",    "home",    "Bầu Cua Tôm Cá —\nChip Ảo, Không Tiền Thật"),
-        ("02-betting", "betting", "Đặt cược vào một\nhoặc nhiều con vật"),
-        ("03-rolling", "rolling", "Lắc bát —\nba xúc xắc, sáu con vật"),
-        ("04-result",  "result",  "Trúng là ăn —\ncược nhân số lần trúng"),
-        ("05-upgrade", "upgrade", "Giao diện Pro,\nthống kê & không quảng cáo"),
+        ("01-home",      "home",       "Bầu Cua Tôm Cá —\nĐoán Đúng, Ghi Điểm, Không Cá Cược"),
+        ("02-predicting", "predicting", "Dự đoán một\nhoặc nhiều con vật"),
+        ("03-rolling",   "rolling",    "Lắc bát —\nba xúc xắc, sáu con vật"),
+        ("04-result",    "result",     "Trúng là ghi điểm —\n10 điểm mỗi lần trúng"),
+        ("05-upgrade",   "upgrade",    "Giao diện Pro,\nthống kê & không quảng cáo"),
     ],
 }
 

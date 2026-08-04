@@ -1,81 +1,60 @@
 import Foundation
 import Combine
 
-/// Solo-vs-the-house Bầu Cua Tôm Cá. No AI opponent, no "difficulty" concept —
-/// the player bets chips against the dice, round after round.
+/// Solo Bầu Cua Tôm Cá. No AI opponent, no "difficulty" concept — the player
+/// predicts which symbols the dice will show, then rolls, round after round.
 ///
-/// COMPLIANCE (see CLAUDE.md): `chips` is a pure simulation currency. It is
-/// never purchasable with real money anywhere in this app. If the balance
-/// hits 0, the player always gets a FREE top-up (immediate the first time,
-/// then time-gated — Pro removes the wait, it does not sell chips).
+/// COMPLIANCE (see CLAUDE.md): this is a pure prediction/scoring game, not a
+/// wagering game. Predicting a symbol never stakes or risks anything — there
+/// is no way to lose points, spend points, or run out of points. `score` only
+/// ever goes up. Nothing in this app is purchasable with real money.
 @MainActor
 final class GameModel: ObservableObject {
-    static let startingChips = 1000
-    static let freeTopUpAmount = 500
-    static let freeTopUpCooldown: TimeInterval = 60 * 60 * 4 // 4 hours
+    static let pointsPerMatch = 10
 
-    @Published var chips: Int {
-        didSet { UserDefaults.standard.set(chips, forKey: "bc_chips") }
+    @Published var score: Int {
+        didSet { UserDefaults.standard.set(score, forKey: "bc_score") }
     }
-    @Published var bets: [Symbol: Int] = [:]
+    @Published var predictions: Set<Symbol> = []
     @Published var dice: [Symbol] = [.bau, .cua, .tom]
     @Published var isRolling = false
-    @Published var lastResults: [BetResult] = []
-    @Published var lastNetChange: Int = 0
+    @Published var lastResults: [GuessResult] = []
+    @Published var lastPointsEarned: Int = 0
 
     @Published var roundsPlayed: Int {
         didSet { UserDefaults.standard.set(roundsPlayed, forKey: "bc_roundsPlayed") }
     }
-    @Published var biggestWin: Int {
-        didSet { UserDefaults.standard.set(biggestWin, forKey: "bc_biggestWin") }
+    @Published var bestRoundScore: Int {
+        didSet { UserDefaults.standard.set(bestRoundScore, forKey: "bc_bestRoundScore") }
     }
     @Published var bestStreak: Int {
         didSet { UserDefaults.standard.set(bestStreak, forKey: "bc_bestStreak") }
     }
-    @Published var lastFreeTopUpDate: Date? {
-        didSet { UserDefaults.standard.set(lastFreeTopUpDate, forKey: "bc_lastFreeTopUp") }
-    }
 
-    /// Set true when Pro is owned. Removes the free-top-up wait — still
-    /// free, never a paid mechanic. See PurchaseManager.swift compliance note.
-    var unlimitedFreeRefills = false
-
-    var totalBet: Int { bets.values.reduce(0, +) }
-    var canRoll: Bool { totalBet > 0 && totalBet <= chips && !isRolling }
+    var canRoll: Bool { !predictions.isEmpty && !isRolling }
 
     init() {
         let d = UserDefaults.standard
-        chips = (d.object(forKey: "bc_chips") as? Int) ?? GameModel.startingChips
+        score = d.integer(forKey: "bc_score")
         roundsPlayed = d.integer(forKey: "bc_roundsPlayed")
-        biggestWin = d.integer(forKey: "bc_biggestWin")
+        bestRoundScore = d.integer(forKey: "bc_bestRoundScore")
         bestStreak = d.integer(forKey: "bc_bestStreak")
-        lastFreeTopUpDate = d.object(forKey: "bc_lastFreeTopUp") as? Date
     }
 
-    // MARK: - Betting phase
+    // MARK: - Prediction phase
 
-    /// Adjust the stake on one symbol by `delta` chips, clamped to what's
-    /// left of the current balance after other symbols' stakes.
-    func adjustBet(_ symbol: Symbol, by delta: Int) {
+    func toggle(_ symbol: Symbol) {
         guard !isRolling else { return }
-        let current = bets[symbol] ?? 0
-        let spentElsewhere = totalBet - current
-        let capped = max(0, min(current + delta, chips - spentElsewhere))
-        setBet(symbol, amount: capped)
-    }
-
-    func setBet(_ symbol: Symbol, amount: Int) {
-        guard !isRolling else { return }
-        if amount <= 0 {
-            bets.removeValue(forKey: symbol)
+        if predictions.contains(symbol) {
+            predictions.remove(symbol)
         } else {
-            bets[symbol] = amount
+            predictions.insert(symbol)
         }
     }
 
-    func clearBets() {
+    func clearPredictions() {
         guard !isRolling else { return }
-        bets.removeAll()
+        predictions.removeAll()
     }
 
     // MARK: - Rolling
@@ -84,60 +63,38 @@ final class GameModel: ObservableObject {
         guard canRoll else { return }
         isRolling = true
         lastResults = []
-        let staked = bets
-        chips -= totalBet // stakes leave the balance immediately; returned per the payout table in settle()
+        let predicted = predictions
 
         Task {
             try? await Task.sleep(nanoseconds: 900_000_000) // "shake the bowl" animation window
             let outcome = (0..<3).map { _ in Symbol.allCases.randomElement()! }
-            settle(dice: outcome, staked: staked)
+            settle(dice: outcome, predicted: predicted)
         }
     }
 
-    private func settle(dice outcome: [Symbol], staked: [Symbol: Int]) {
+    private func settle(dice outcome: [Symbol], predicted: Set<Symbol>) {
         dice = outcome
-        var results: [BetResult] = []
-        var returned = 0
+        var results: [GuessResult] = []
+        var earned = 0
         var maxMatchesThisRound = 0
 
-        for (symbol, amount) in staked {
+        for symbol in predicted {
             let matches = outcome.filter { $0 == symbol }.count
-            let result = BetResult(symbol: symbol, staked: amount, matches: matches)
+            let result = GuessResult(symbol: symbol, matches: matches)
             results.append(result)
-            returned += result.totalReturned
+            earned += result.pointsEarned
             maxMatchesThisRound = max(maxMatchesThisRound, matches)
         }
 
-        chips += returned
+        score += earned
         lastResults = results.sorted { $0.symbol.rawValue < $1.symbol.rawValue }
-        lastNetChange = returned - staked.values.reduce(0, +)
+        lastPointsEarned = earned
         roundsPlayed += 1
-        if lastNetChange > biggestWin { biggestWin = lastNetChange }
+        if lastPointsEarned > bestRoundScore { bestRoundScore = lastPointsEarned }
         if maxMatchesThisRound > bestStreak { bestStreak = maxMatchesThisRound }
 
-        bets.removeAll()
+        predictions.removeAll()
         isRolling = false
-    }
-
-    // MARK: - Free chip top-up (never paid)
-
-    var topUpAvailable: Bool {
-        guard chips <= 0 else { return false }
-        if unlimitedFreeRefills { return true }
-        guard let last = lastFreeTopUpDate else { return true } // first time ever: instant, no wait
-        return Date().timeIntervalSince(last) >= GameModel.freeTopUpCooldown
-    }
-
-    var topUpCooldownRemaining: TimeInterval {
-        guard let last = lastFreeTopUpDate else { return 0 }
-        return max(0, GameModel.freeTopUpCooldown - Date().timeIntervalSince(last))
-    }
-
-    /// Player taps "Claim Free Chips" — never a paid path, see CLAUDE.md.
-    func claimFreeTopUp() {
-        guard chips <= 0, topUpAvailable else { return }
-        chips = GameModel.freeTopUpAmount
-        lastFreeTopUpDate = Date()
     }
 }
 
@@ -147,24 +104,24 @@ extension GameModel {
     func captureSetup(_ scenario: String) {
         switch scenario {
         case "result":
-            chips = 1180
+            score = 1180
             dice = [.cua, .cua, .tom]
             lastResults = [
-                BetResult(symbol: .cua, staked: 50, matches: 2),
-                BetResult(symbol: .tom, staked: 20, matches: 1),
-                BetResult(symbol: .ga, staked: 30, matches: 0),
+                GuessResult(symbol: .cua, matches: 2),
+                GuessResult(symbol: .tom, matches: 1),
+                GuessResult(symbol: .ga, matches: 0),
             ]
-            lastNetChange = 50 * 2 + 20 * 1 - 30
+            lastPointsEarned = 2 * GameModel.pointsPerMatch + 1 * GameModel.pointsPerMatch
             roundsPlayed = 14
-            biggestWin = 150
+            bestRoundScore = 150
             bestStreak = 3
         case "rolling":
-            chips = 940
-            bets = [.bau: 20, .ca: 40]
+            score = 940
+            predictions = [.bau, .ca]
             isRolling = true
-        default: // "betting"
-            chips = 1000
-            bets = [.cua: 50, .tom: 20, .ga: 30]
+        default: // "predicting"
+            score = 1000
+            predictions = [.cua, .tom, .ga]
         }
     }
 }

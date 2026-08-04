@@ -131,7 +131,7 @@ class PurchaseManager: ObservableObject {
 
 // NOTE (compliance — do not change without re-reading CLAUDE.md):
 // This IAP is a single non-consumable "Pro" unlock. It must NEVER be
-// extended into a chip pack / currency / refill purchase. Pro unlocks
-// cosmetic and QoL features only (alternate themes, detailed stats, no ads,
-// and removing the free-refill wait) — it never touches the chip economy,
-// odds, or payouts. Chips are not, and must never become, purchasable.
+// extended into a points pack / currency / wager purchase. Pro unlocks
+// cosmetic and QoL features only (alternate themes, detailed stats, no
+// ads) — it never touches scoring, odds, or introduces anything that could
+// be staked or wagered. This app has no gambling mechanic of any kind.

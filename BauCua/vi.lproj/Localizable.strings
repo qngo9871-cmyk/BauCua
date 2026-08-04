@@ -1,12 +1,12 @@
 "home.title" = "Bầu Cua Tôm Cá";
-"home.subtitle" = "Trò Chơi Dân Gian — Chơi Bằng Chip Ảo";
+"home.subtitle" = "Trò Chơi Dân Gian — Đoán Đúng, Ghi Điểm, Không Cá Cược";
 "home.play" = "Chơi";
 "home.rules" = "Luật Chơi";
 "home.howtoplay" = "Hướng Dẫn";
 "home.upgrade" = "Mở khóa Pro — giao diện, thống kê & hơn thế nữa →";
 "home.stats" = "Thống Kê";
 
-"chips.balance" = "Số Dư";
+"score.label" = "Điểm";
 
 "symbol.bau" = "Bầu";
 "symbol.cua" = "Cua";
@@ -16,28 +16,23 @@
 "symbol.nai" = "Nai";
 
 "game.shake" = "Lắc!";
-"game.clearBets" = "Xóa Cược";
+"game.clearPicks" = "Xóa Lựa Chọn";
 
-"result.win" = "Bạn thắng %d chip!";
-"result.lose" = "Bạn thua %d chip.";
+"result.points" = "+%d điểm!";
+"result.noMatch" = "Không trúng";
 "result.continue" = "Tiếp Tục";
-
-"topup.title" = "Hết Chip";
-"topup.body" = "Tặng bạn %d chip miễn phí — không cần mua, không bao giờ.";
-"topup.claim" = "Nhận Chip Miễn Phí";
-"topup.wait" = "Lượt nạp miễn phí tiếp theo trong %@";
 
 "stats.title" = "Thống Kê Của Bạn";
 "stats.roundsPlayed" = "Số Ván Đã Chơi";
-"stats.biggestWin" = "Thắng Lớn Nhất";
+"stats.bestRoundScore" = "Điểm Cao Nhất Một Ván";
 "stats.bestStreak" = "Chuỗi Trúng Tốt Nhất";
 "stats.close" = "Đóng";
 
 "upgrade.title" = "Bầu Cua Pro";
 "upgrade.subtitle" = "Mở khóa trải nghiệm đầy đủ.";
 "upgrade.feature.themes" = "Giao diện bát và xúc xắc khác";
-"upgrade.feature.stats" = "Thống kê chi tiết — chuỗi trúng, thắng lớn nhất & hơn thế nữa";
-"upgrade.feature.noAds" = "Không quảng cáo + nạp chip miễn phí không giới hạn";
+"upgrade.feature.stats" = "Thống kê chi tiết — chuỗi trúng, điểm cao nhất & hơn thế nữa";
+"upgrade.feature.noAds" = "Không quảng cáo, vĩnh viễn";
 "upgrade.owned" = "Bạn đã sở hữu Bầu Cua Pro ✓";
 "upgrade.buy" = "Mở Khóa — %@";
 "upgrade.buyFallback" = "Mở Khóa Bầu Cua Pro";
@@ -48,20 +43,20 @@
 "rules.done" = "Xong";
 "rules.symbols.title" = "Sáu Con Vật";
 "rules.symbols.body" = "Bầu, Cua, Tôm, Cá, Gà, và Nai — mỗi mặt trong 3 xúc xắc sẽ hiện một trong sáu con vật này.";
-"rules.betting.title" = "Đặt Cược";
-"rules.betting.body" = "Đặt cược chip vào một con vật, hoặc chia cược vào nhiều con cùng lúc. Bạn cần đặt ít nhất 1 chip vào ít nhất 1 con vật trước khi lắc.";
+"rules.betting.title" = "Chọn Dự Đoán";
+"rules.betting.body" = "Chạm vào một con vật để dự đoán nó sẽ xuất hiện, hoặc chọn nhiều con cùng lúc. Bạn cần ít nhất 1 dự đoán trước khi lắc — không có gì để đặt cược, nên không có gì để mất.";
 "rules.roll.title" = "Lắc Bát";
 "rules.roll.body" = "Ba xúc xắc được lắc cùng nhau, mỗi xúc xắc độc lập rơi vào một trong sáu con vật.";
-"rules.payout.title" = "Cách Ăn Tiền";
-"rules.payout.body" = "Với mỗi con vật bạn đặt cược, đếm số xúc xắc trúng con đó. 0 lần trúng thì mất cược. Trúng 1, 2, hoặc 3 lần thì được hoàn lại cược cộng thêm cược nhân với số lần trúng — ví dụ: đặt 10 chip, trúng 2 lần, bạn lời +20.";
-"rules.topup.title" = "Không Bao Giờ Mua Chip";
-"rules.topup.body" = "Chip không bao giờ có thể mua bằng tiền thật. Nếu số dư về 0, bạn luôn được nạp miễn phí — bản Pro chỉ bỏ thời gian chờ.";
+"rules.payout.title" = "Cách Tính Điểm";
+"rules.payout.body" = "Với mỗi con vật bạn đã dự đoán, đếm số xúc xắc trúng con đó. Mỗi lần trúng được 10 điểm — trúng 1 lần +10, trúng 2 lần +20, trúng 3 lần +30. Không trúng thì con đó được 0 điểm; điểm của bạn không bao giờ giảm.";
+"rules.topup.title" = "Không Cá Cược, Không Bao Giờ";
+"rules.topup.body" = "Trò chơi này không có cược, không có tiền tệ để mua, và không có cách nào để mất điểm. Không có gì trong trò chơi này có thể mua bằng tiền thật.";
 
-"onboarding.bet.title" = "Đặt Cược";
-"onboarding.bet.body" = "Chọn một hoặc nhiều trong 6 con vật — Bầu, Cua, Tôm, Cá, Gà, Nai — và đặt chip vào từng con.";
+"onboarding.bet.title" = "Chọn Dự Đoán";
+"onboarding.bet.body" = "Chạm vào một hoặc nhiều trong 6 con vật — Bầu, Cua, Tôm, Cá, Gà, Nai — để dự đoán chúng sẽ xuất hiện.";
 "onboarding.shake.title" = "Lắc Bát";
 "onboarding.shake.body" = "Ba xúc xắc lăn trong bát, mỗi xúc xắc rơi vào một trong sáu con vật.";
-"onboarding.payout.title" = "Trúng Là Thắng";
-"onboarding.payout.body" = "Mỗi xúc xắc trúng con vật bạn đặt cược sẽ trả thưởng — càng trúng nhiều, thắng càng lớn. Không trúng thì mất cược đó.";
+"onboarding.payout.title" = "Trúng Là Ghi Điểm";
+"onboarding.payout.body" = "Mỗi xúc xắc trúng con vật bạn đã dự đoán sẽ cho điểm — càng trúng nhiều, điểm càng cao. Không có gì bị mất cả.";
 "onboarding.next" = "Tiếp";
 "onboarding.begin" = "Chơi Thôi";
