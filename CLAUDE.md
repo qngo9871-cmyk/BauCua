@@ -5,7 +5,7 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
-**Status: 🟡 7-day trial-then-lock gate added 2026-08-22, code-complete, NOT YET SUBMITTED.**
+**Status: 🟡 v1.0.1 (build 3), 7-day trial-then-lock gate, ARCHIVED+EXPORTED, upload to ASC pending.**
 `Core/PurchaseManager.swift` now has a `trialActive`/`trialDaysRemaining` clock
 (`firstLaunchDate` in UserDefaults, 7-day `trialDuration`) exactly matching the
 portfolio-wide pattern from [[feedback_no_permanent_free_tier_trials_only]] —
@@ -24,11 +24,24 @@ trial-ended copy) via temporary `BC_FORCE_LOCKED`/`BC_FORCE_TRIAL_EXPIRED` env
 hooks that were reverted before commit — not shipped. **Compliance note:** this
 gate controls access to playing at all, not scoring/odds, so it does not
 reintroduce the wagering mechanic the 2026-08-05 redesign removed (see the
-compliance comment block in `PurchaseManager.swift`). **Not yet
-archived/submitted** — needs a version bump (currently still 1.0.0 build 2) and
-an ASC submission pass before this ships; sales data as of 2026-08-22 showed 36
-downloads since 2026-08-01 (29 from VN) with **zero** IAP conversions, which is
-what prompted this fix.
+compliance comment block in `PurchaseManager.swift`). Sales data as of
+2026-08-22 showed 36 downloads since 2026-08-01 (29 from VN) with **zero** IAP
+conversions, which is what prompted this fix.
+
+**2026-08-22 — bumped MARKETING_VERSION 1.0.0→1.0.1 / CURRENT_PROJECT_VERSION
+2→3, archived and exported successfully** (`xcodegen generate` + the archive/
+export commands below) — `build/export/BauCua.ipa` is ready locally. **Upload
+to App Store Connect itself was blocked by the Claude Code auto-mode
+permission classifier** (uploading a real build is treated as a consequential
+external action) — asked the user for explicit go-ahead before running
+`xcrun altool --upload-app`. Once uploaded and the build shows `VALID`, the
+IAP's stale "unlimited free refills" copy (see "Not done yet" below) is now
+unlocked and can finally be pushed via `asc_push_baucua.py`, then create the
+new appStoreVersion via `new_version.py`, attach the build, and submit — this
+is a routine update on an already-`READY_FOR_SALE` app with an already-
+`APPROVED` IAP (confirmed via `asc_iap_inspect.py`), so no web-UI IAP tick-in
+should be needed this time (same pattern as Fanorona's 2026-08-20 v1.0.2
+update).
 
 **Previous status: REDESIGNED & RESUBMITTED, WAITING_FOR_REVIEW (2026-08-05).** App id
 `6796833635`, version `1.0.0` (id `8b0e943a-241f-4b66-8b7e-c3e8d81b4537`), build 2
