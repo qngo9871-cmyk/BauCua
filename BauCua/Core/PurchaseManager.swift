@@ -10,13 +10,43 @@ class PurchaseManager: ObservableObject {
     @Published var productLoadFailed = false
     @Published var isPurchasing = false
     @Published var purchaseError: String?
+    @Published var trialActive = true
 
     private let productID = "com.quyenngo.baucua.pro"
     private var transactionListener: Task<Void, Never>?
 
+    private let firstLaunchKey = "firstLaunchDate"
+    private let trialDuration: TimeInterval = 7 * 24 * 60 * 60
+
+    /// Days left in the 7-day free trial (0 once expired).
+    var trialDaysRemaining: Int {
+        let defaults = UserDefaults.standard
+        guard let firstLaunch = defaults.object(forKey: firstLaunchKey) as? Date else { return 7 }
+        let remaining = trialDuration - Date().timeIntervalSince(firstLaunch)
+        return max(0, Int(ceil(remaining / (24 * 60 * 60))))
+    }
+
     init() {
         transactionListener = listenForTransactions()
+        evaluateTrialStatus()
         Task { await updateEntitlementStatus() }
+    }
+
+    /// Reads (or sets, on first-ever launch) the trial start date and
+    /// updates `trialActive`. Existing installs upgrading from a pre-trial
+    /// build have no stored date yet, so this update starts their 7-day
+    /// clock rather than locking them out immediately.
+    func evaluateTrialStatus() {
+        let defaults = UserDefaults.standard
+        let now = Date()
+        let firstLaunch: Date
+        if let stored = defaults.object(forKey: firstLaunchKey) as? Date {
+            firstLaunch = stored
+        } else {
+            firstLaunch = now
+            defaults.set(now, forKey: firstLaunchKey)
+        }
+        trialActive = Date().timeIntervalSince(firstLaunch) < trialDuration
     }
 
     deinit { transactionListener?.cancel() }
@@ -135,3 +165,9 @@ class PurchaseManager: ObservableObject {
 // cosmetic and QoL features only (alternate themes, detailed stats, no
 // ads) — it never touches scoring, odds, or introduces anything that could
 // be staked or wagered. This app has no gambling mechanic of any kind.
+//
+// The 7-day trialActive gate below controls ACCESS to playing at all — it
+// does not touch scoring/odds/matches, so it doesn't reintroduce anything
+// wager-like. Gating play itself is a standing portfolio-wide rule (see
+// feedback_no_permanent_free_tier_trials_only), independent of the
+// gambling-descriptor compliance constraint above.

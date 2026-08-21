@@ -4,6 +4,8 @@
 "home.rules" = "Full Rules";
 "home.howtoplay" = "How to Play";
 "home.upgrade" = "Unlock Pro — themes, stats & more →";
+"home.upgrade.trialended" = "Trial ended — unlock to keep playing →";
+"home.trialdays" = "Free trial — %d day(s) left";
 "home.stats" = "Stats";
 
 "score.label" = "Score";
@@ -30,6 +32,7 @@
 
 "upgrade.title" = "Bầu Cua Pro";
 "upgrade.subtitle" = "Unlock the full experience.";
+"upgrade.subtitle.trialended" = "Your 7-day free trial has ended. Unlock Bầu Cua Pro to keep playing.";
 "upgrade.feature.themes" = "Alternate dice & bowl visual themes";
 "upgrade.feature.stats" = "Detailed stats — streaks, best score & more";
 "upgrade.feature.noAds" = "No ads, ever";

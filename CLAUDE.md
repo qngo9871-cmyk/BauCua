@@ -5,7 +5,32 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
-**Status: 🟢 REDESIGNED & RESUBMITTED, WAITING_FOR_REVIEW (2026-08-05).** App id
+**Status: 🟡 7-day trial-then-lock gate added 2026-08-22, code-complete, NOT YET SUBMITTED.**
+`Core/PurchaseManager.swift` now has a `trialActive`/`trialDaysRemaining` clock
+(`firstLaunchDate` in UserDefaults, 7-day `trialDuration`) exactly matching the
+portfolio-wide pattern from [[feedback_no_permanent_free_tier_trials_only]] —
+this app was previously **permanently free** (the `Play` button had zero lock
+check) and was found as a gap in the 2026-08-18 rollout (it's a dice-prediction
+game, not board/card, so it wasn't on the original 19-app scan list). `HomeView`'s
+`Play` button now opens `UpgradeView` instead of starting a game once the trial
+expires and the user isn't Pro; a "Free trial — N day(s) left" banner shows
+during the trial, and a "Trial ended — unlock to keep playing →" link replaces
+the normal upgrade link once it lapses. `UpgradeView`'s subtitle switches to a
+trial-ended message too. Added `home.trialdays`/`home.upgrade.trialended`/
+`upgrade.subtitle.trialended` to both `en` and `vi` `Localizable.strings`.
+Verified all three UI states live in Simulator (trial-active banner + unlocked
+Play, trial-expired locked Play with 🔒 + upgrade prompt, `UpgradeView`
+trial-ended copy) via temporary `BC_FORCE_LOCKED`/`BC_FORCE_TRIAL_EXPIRED` env
+hooks that were reverted before commit — not shipped. **Compliance note:** this
+gate controls access to playing at all, not scoring/odds, so it does not
+reintroduce the wagering mechanic the 2026-08-05 redesign removed (see the
+compliance comment block in `PurchaseManager.swift`). **Not yet
+archived/submitted** — needs a version bump (currently still 1.0.0 build 2) and
+an ASC submission pass before this ships; sales data as of 2026-08-22 showed 36
+downloads since 2026-08-01 (29 from VN) with **zero** IAP conversions, which is
+what prompted this fix.
+
+**Previous status: REDESIGNED & RESUBMITTED, WAITING_FOR_REVIEW (2026-08-05).** App id
 `6796833635`, version `1.0.0` (id `8b0e943a-241f-4b66-8b7e-c3e8d81b4537`), build 2
 (`d11eceae-49c9-4124-b763-0c48358a0b50`) attached, new reviewSubmission
 `f631ffef-c17e-4e19-808b-4cd09f82b800` submitted. Release type: automatic

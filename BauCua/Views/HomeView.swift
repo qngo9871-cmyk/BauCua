@@ -28,6 +28,10 @@ struct HomeView: View {
                             .multilineTextAlignment(.center)
                         Text(L("home.subtitle")).font(.subheadline).foregroundStyle(.white.opacity(0.7))
                             .multilineTextAlignment(.center).padding(.horizontal, 24)
+                        if !purchases.isPro && purchases.trialActive {
+                            Text(String(format: L("home.trialdays"), purchases.trialDaysRemaining))
+                                .font(.caption.bold()).foregroundStyle(.yellow).padding(.top, 2)
+                        }
                     }
 
                     VStack(spacing: 4) {
@@ -38,9 +42,14 @@ struct HomeView: View {
 
                     VStack(spacing: 14) {
                         Button {
-                            showGame = true
+                            if purchases.isPro || purchases.trialActive {
+                                showGame = true
+                            } else {
+                                showUpgrade = true
+                            }
                         } label: {
-                            Text(L("home.play")).font(.title3.bold()).frame(maxWidth: 280).padding()
+                            Text(L("home.play") + (!purchases.isPro && !purchases.trialActive ? " 🔒" : ""))
+                                .font(.title3.bold()).frame(maxWidth: 280).padding()
                         }
                         .buttonStyle(.borderedProminent).tint(.orange)
 
@@ -60,7 +69,8 @@ struct HomeView: View {
 
                         if !purchases.isPro {
                             Button { showUpgrade = true } label: {
-                                Text(L("home.upgrade")).font(.footnote).foregroundStyle(.yellow)
+                                Text(L(purchases.trialActive ? "home.upgrade" : "home.upgrade.trialended"))
+                                    .font(.footnote).foregroundStyle(.yellow)
                             }
                         }
                     }

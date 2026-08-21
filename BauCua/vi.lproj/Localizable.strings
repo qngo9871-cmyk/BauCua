@@ -4,6 +4,8 @@
 "home.rules" = "Luật Chơi";
 "home.howtoplay" = "Hướng Dẫn";
 "home.upgrade" = "Mở khóa Pro — giao diện, thống kê & hơn thế nữa →";
+"home.upgrade.trialended" = "Hết dùng thử — mở khóa để tiếp tục chơi →";
+"home.trialdays" = "Dùng thử miễn phí — còn %d ngày";
 "home.stats" = "Thống Kê";
 
 "score.label" = "Điểm";
@@ -30,6 +32,7 @@
 
 "upgrade.title" = "Bầu Cua Pro";
 "upgrade.subtitle" = "Mở khóa trải nghiệm đầy đủ.";
+"upgrade.subtitle.trialended" = "Thời gian dùng thử 7 ngày đã kết thúc. Mở khóa Bầu Cua Pro để tiếp tục chơi.";
 "upgrade.feature.themes" = "Giao diện bát và xúc xắc khác";
 "upgrade.feature.stats" = "Thống kê chi tiết — chuỗi trúng, điểm cao nhất & hơn thế nữa";
 "upgrade.feature.noAds" = "Không quảng cáo, vĩnh viễn";
