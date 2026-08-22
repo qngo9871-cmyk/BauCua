@@ -5,7 +5,19 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
-**Status: 🟡 v1.0.1 (build 3), 7-day trial-then-lock gate, ARCHIVED+EXPORTED, upload to ASC pending.**
+**Status: 🟢 v1.0.1 (build 3), 7-day trial-then-lock gate, SUBMITTED, WAITING_FOR_REVIEW (2026-08-22).**
+App id `6796833635`, version `1.0.1` (id `13029ddc-f413-4961-969a-9ebacab11fe6`),
+build 3 (id `51a5bef7-b6f8-4169-b8bb-b027784e96b8`, processed `VALID`) attached,
+reviewSubmission `95670d6c-59a7-49f5-ba2f-d1cd7b35a238` submitted at
+2026-08-22T05:32:15Z. Gotcha hit during submit: `new_version.py` only patches
+the `en-US` locale's `whatsNew` — the `vi` localization needed its own manual
+`whatsNew` PATCH before `reviewSubmissionItems` would accept the version
+(409 `ENTITY_ERROR.ATTRIBUTE.REQUIRED`), same pattern as ChineseChess
+v1.0.5/v1.0.6's zh-Hant gotcha — any future non-English-only submission via
+that script needs the same manual follow-up per extra locale. Also hit two
+transient 500 `UNEXPECTED_ERROR` responses from Apple's API on both the
+`reviewSubmissionItems` POST and the final `submitted:true` PATCH — both
+resolved on retry with a short backoff, not a real blocker.
 `Core/PurchaseManager.swift` now has a `trialActive`/`trialDaysRemaining` clock
 (`firstLaunchDate` in UserDefaults, 7-day `trialDuration`) exactly matching the
 portfolio-wide pattern from [[feedback_no_permanent_free_tier_trials_only]] —
