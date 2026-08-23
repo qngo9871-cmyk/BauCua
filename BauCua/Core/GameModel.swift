@@ -10,7 +10,7 @@ import Combine
 /// ever goes up. Nothing in this app is purchasable with real money.
 @MainActor
 final class GameModel: ObservableObject {
-    static let pointsPerMatch = 10
+    nonisolated static let pointsPerMatch = 10
 
     @Published var score: Int {
         didSet { UserDefaults.standard.set(score, forKey: "bc_score") }

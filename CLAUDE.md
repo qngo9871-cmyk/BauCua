@@ -5,6 +5,21 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
+**2026-08-24 — v1.0.2 (build 4), DEBUG bug + Swift 6 concurrency fix, SUBMITTED.** Found by
+the new portfolio-wide `~/asc-tools/compliance_gate.py`: `PurchaseManager.
+updateEntitlementStatus()`'s DEBUG branch had a bare `isPro = true`, the same double-gating
+bug already fixed in SamLoc/Fanorona/Dara/Surakarta — fixed with the same capture-mode-
+exempted pattern (`isPro = BC_CAPTURE != nil && BC_CAPTURE != "home" && BC_CAPTURE !=
+"upgrade"`). Also found and fixed a real (if currently harmless) Swift 6 concurrency
+warning: `GameModel.pointsPerMatch` is `@MainActor`-isolated but read from the non-isolated
+`GuessResult.pointsEarned` — marked `nonisolated static let` since it's an immutable
+constant, safe to access from any context. Verified clean build (0 warnings) and visually
+re-confirmed the home screen shows the real trial/free-tier state (not a DEBUG-forced fake
+unlock). No gameplay/scoring/purchase logic changed. **SUBMITTED, WAITING_FOR_REVIEW** —
+app `6796833635`, version `1.0.2` (id `af403157-f5a1-40dd-bd75-5862f57d691a`), build
+`4`/`04f12e59-a5a7-4f83-9457-5f72cd0c7873` attached, reviewSubmission
+`b4f18dd3-c7d2-47f5-a769-7d15c0182eae`.
+
 **Status: 🟢 v1.0.1 (build 3), 7-day trial-then-lock gate, SUBMITTED, WAITING_FOR_REVIEW (2026-08-22).**
 App id `6796833635`, version `1.0.1` (id `13029ddc-f413-4961-969a-9ebacab11fe6`),
 build 3 (id `51a5bef7-b6f8-4169-b8bb-b027784e96b8`, processed `VALID`) attached,
