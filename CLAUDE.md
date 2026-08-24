@@ -5,6 +5,18 @@ Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
 the sibling card game `~/Projects/SamLoc` (bundle `com.quyenngo.samloc`, already shipped).
 
+**2026-08-24 (later same day) — vision QA found the v1.0.2 submission's own paywall
+screenshot is stale and shows the pre-fix bug.** `screenshots/final/{en,vi}/05-upgrade.png`
+was last captured before today's DEBUG isPro fix (the code below was already correct,
+the screenshot on disk — and thus already pushed to ASC with this submission — wasn't)
+and showed "You own Bầu Cua Pro ✓" instead of a real buy button, a fresh install would
+never see that screen. Recaptured both locales after adding a `simctl erase` step to
+`capture_shots.py` (trial-day count wasn't deterministic) and an 8s post-install settle
+wait (a freshly-erased simulator can surface a first-boot system notification that would
+otherwise land in frame). Verified both locales now show the real "Unlock Bầu Cua Pro"
+button. **Not yet pushed to ASC** — v1.0.2 is `WAITING_FOR_REVIEW`; whether its
+screenshots can still be updated mid-review needs the user's call.
+
 **2026-08-24 — v1.0.2 (build 4), DEBUG bug + Swift 6 concurrency fix, SUBMITTED.** Found by
 the new portfolio-wide `~/asc-tools/compliance_gate.py`: `PurchaseManager.
 updateEntitlementStatus()`'s DEBUG branch had a bare `isPro = true`, the same double-gating
