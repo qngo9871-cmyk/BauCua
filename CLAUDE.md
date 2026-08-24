@@ -14,8 +14,15 @@ never see that screen. Recaptured both locales after adding a `simctl erase` ste
 `capture_shots.py` (trial-day count wasn't deterministic) and an 8s post-install settle
 wait (a freshly-erased simulator can surface a first-boot system notification that would
 otherwise land in frame). Verified both locales now show the real "Unlock Bầu Cua Pro"
-button. **Not yet pushed to ASC** — v1.0.2 is `WAITING_FOR_REVIEW`; whether its
-screenshots can still be updated mid-review needs the user's call.
+button. **Pulled, fixed, and resubmitted per standing user policy** (found post-submit
+bug → cancel → fix → resubmit, applies to all apps): canceled the v1.0.2
+reviewSubmission (`b4f18dd3-...`, `CANCELING`→`COMPLETE`), bumped to **v1.0.3
+(build 5)** in `project.yml`, archived/exported/uploaded (Delivery UUID
+`707e973f-6729-4b18-bfba-cfe5e2466ce9`, processed `VALID`), attached to the same
+appStoreVersion record (versionString PATCHed 1.0.2→1.0.3), pushed the corrected
+screenshots via `asc_push_baucua_screenshots.py`, updated `whatsNew` (both locales),
+created a new reviewSubmission `24a42123-3b06-4bc1-85f9-ac57407b72df` and submitted.
+**Verified: WAITING_FOR_REVIEW as v1.0.3.**
 
 **2026-08-24 — v1.0.2 (build 4), DEBUG bug + Swift 6 concurrency fix, SUBMITTED.** Found by
 the new portfolio-wide `~/asc-tools/compliance_gate.py`: `PurchaseManager.
