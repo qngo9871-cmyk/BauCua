@@ -1,5 +1,16 @@
 # Bầu Cua Tôm Cá — Vietnamese Dice Game
 
+**2026-08-30 (later same day) — v1.0.5 (build 7), language-switch bug fix, merged into
+the pending v1.0.4 submission and resubmitted.** Portfolio-wide sweep found the language
+Picker bound directly to `$loc.language`, bypassing `setLanguage(_:)`, so the string
+bundle never updated on switch (see memory `feedback_localization_picker_direct_binding_bug`
+for the full root cause, shared across 16 apps). v1.0.4 was already `WAITING_FOR_REVIEW`
+for an unrelated description-text fix (build 6) — canceled that reviewSubmission (not
+deleted, per `asc-resubmit-after-rejection`), bumped the freed version's `versionString`
+1.0.4→1.0.5, attached the new build (7, includes both fixes), merged `whatsNew` to cover
+both changes, appended a review-notes addendum, and resubmitted. **Verified:
+WAITING_FOR_REVIEW as v1.0.5.**
+
 **2026-08-30 — v1.0.4 (build 6), description-text fix, SUBMITTED, WAITING_FOR_REVIEW.**
 A portfolio-wide listing/review audit found the live description (from before the
 2026-08-22 trial-lock fix) still said the game was "always free-to-play" and described
