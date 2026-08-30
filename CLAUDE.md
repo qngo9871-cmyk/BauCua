@@ -1,5 +1,21 @@
 # Bầu Cua Tôm Cá — Vietnamese Dice Game
 
+**2026-08-30 — v1.0.4 (build 6), description-text fix, SUBMITTED, WAITING_FOR_REVIEW.**
+A portfolio-wide listing/review audit found the live description (from before the
+2026-08-22 trial-lock fix) still said the game was "always free-to-play" and described
+Pro as "OPTIONAL, COSMETIC ONLY" — both now stale against the actual shipped behavior
+(the whole game locks after a 7-day trial; Pro's one-time unlock restores play access
+*plus* the cosmetic extras). Rewrote just those two sections in both `en-US` and `vi`
+(everything else, including the "NO STAKES, NO WAGERING, EVER" section, is unchanged and
+still accurate) — no code changes. Archived/exported/uploaded with the full explicit
+`-authenticationKeyPath`/`-authenticationKeyID`/`-authenticationKeyIssuerID` flags (no
+Xcode account on this machine, so `-allowProvisioningUpdates` needs them every time, not
+just "the first time" as some other apps' docs wrongly assumed). App `6796833635`,
+version `1.0.4` (id `cf2facfd-bc2d-4831-9255-7e50458e86ee`), build `6`
+(`10edc7b9-bba4-45b2-9244-12c515de2d51`) attached, reviewSubmission
+`7a687cc1-bc0d-47e5-895c-175247fbb4ec` submitted. IAP (`com.quyenngo.baucua.pro`) is
+already `APPROVED` from a prior cycle, so no web-UI tick-in was needed this time.
+
 Native SwiftUI iOS app for Bầu Cua Tôm Cá, the traditional Vietnamese dice game (Bầu/Cua/
 Tôm/Cá/Gà/Nai — gourd/crab/shrimp/fish/rooster/deer). Bundle `com.quyenngo.baucua`. One
 app in a 5-app Vietnamese-games lineup; built following the house pattern established by
