@@ -1,5 +1,13 @@
 # Bầu Cua Tôm Cá — Vietnamese Dice Game
 
+**2026-09-04 — Vietnam IAP price cut to 45,000 VND (manual override).** Apple's
+automatic territory pricing had `baucua.pro` at 99,000 VND for Vietnam (~$3.90
+USD-equivalent, actually *above* the $2.99 US price) — discovered while investigating
+Sam Loc's 0-purchase problem (see `~/Projects/SamLoc/CLAUDE.md`). Since this is a
+Vietnam-market game, added a manual VNM price override (US price stays $2.99, only
+Vietnam changes). No app review needed — pricing is metadata, applies instantly. Worth
+watching VN conversion over the next few weeks.
+
 **2026-08-30 (later same day) — v1.0.5 (build 7), language-switch bug fix, merged into
 the pending v1.0.4 submission and resubmitted.** Portfolio-wide sweep found the language
 Picker bound directly to `$loc.language`, bypassing `setLanguage(_:)`, so the string
